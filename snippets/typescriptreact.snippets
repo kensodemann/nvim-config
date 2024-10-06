@@ -18,6 +18,13 @@ snippet tstbe "Add a before each"
 		$2
 	});
 
+snippet fcomp "Add a functional component"
+	const $1 = () => {
+		return <></>;	
+	};
+	
+	export default $1;
+
 snippet afunc "Add an arrow function"
 	const $1 = () => {
 	};
@@ -25,5 +32,4 @@ snippet afunc "Add an arrow function"
 snippet expafunc "Add an exported arrow function"
 	export const $1 = () => {
 	};
-
 

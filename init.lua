@@ -507,7 +507,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
+        ts_ls = {
           init_options = {
             hostInfo = 'neovim',
             plugins = {
@@ -748,13 +748,14 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     -- 'folke/tokyonight.nvim',
+    'NAlexPear/Spacegray.nvim',
     'pineapplegiant/spaceduck',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'spaceduck'
+      vim.cmd.colorscheme 'Spacegray'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'

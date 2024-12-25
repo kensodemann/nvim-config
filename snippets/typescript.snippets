@@ -27,3 +27,32 @@ snippet expafunc "Add an exported arrow function"
 	};
 
 
+snippet ionvuepagetest "Start an Ionic Vue page test"
+	import { mount, VueWrapper } from '@vue/test-utils';
+	import { describe, expect, it } from 'vitest';
+	import { createRouter, createWebHistory, Router } from 'vue-router';
+	import $1 from '../$1.vue';
+
+	describe('$1', () => {
+		let router: Router;
+
+		const mountView = async (): Promise<VueWrapper<any>> => {
+			router = createRouter({
+				history: createWebHistory(process.env.BASE_URL),
+				routes: [{ path: '/', component: $1 }],
+			});
+			router.push('/');
+			await router.isReady();
+			return mount($1, {
+				global: {
+					plugins: [router],
+				},
+			});
+		};
+
+		it('renders', async () => {
+			const wrapper = await mountView();
+			expect(wrapper.exists()).toBe(true);
+		});
+	});
+

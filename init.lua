@@ -203,7 +203,40 @@ require('lazy').setup({
             system_prompt = require('gp.defaults').code_system_prompt,
           },
         },
-        -- For customization, refer to Install > Configuration in the Documentation/Readme
+        hooks = {
+          CodeReview = function(gp, params)
+            local template = 'I have the following code from {{filename}}:\n\n'
+              .. '```{{filetype}}\n{{selection}}\n```\n\n'
+              .. 'Please analyze for code smells and suggest improvements.'
+            local agent = gp.get_chat_agent()
+            gp.Prompt(params, gp.Target.enew 'markdown', agent, template)
+          end,
+          Explain = function(gp, params)
+            local template = 'I have the following code from {{filename}}:\n\n'
+              .. '```{{filetype}}\n{{selection}}\n```\n\n'
+              .. 'Please respond by explaining the code above.'
+            local agent = gp.get_chat_agent()
+            gp.Prompt(params, gp.Target.popup, agent, template)
+          end,
+          InspectPlugin = function(plugin, params)
+            local bufnr = vim.api.nvim_create_buf(false, true)
+            local copy = vim.deepcopy(plugin)
+            local key = copy.config.openai_api_key or ''
+            copy.config.openai_api_key = key:sub(1, 3) .. string.rep('*', #key - 6) .. key:sub(-3)
+            local plugin_info = string.format('Plugin structure:\n%s', vim.inspect(copy))
+            local params_info = string.format('Command params:\n%s', vim.inspect(params))
+            local lines = vim.split(plugin_info .. '\n' .. params_info, '\n')
+            vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+            vim.api.nvim_win_set_buf(0, bufnr)
+          end,
+          UnitTests = function(gp, params)
+            local template = 'I have the following code from {{filename}}:\n\n'
+              .. '```{{filetype}}\n{{selection}}\n```\n\n'
+              .. 'Please respond by writing table driven unit tests for the code above.'
+            local agent = gp.get_command_agent()
+            gp.Prompt(params, gp.Target.vnew, agent, template)
+          end,
+        },
       }
       require('gp').setup(conf)
 

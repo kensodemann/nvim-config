@@ -169,6 +169,40 @@ require('lazy').setup({
             secret = os.getenv 'GOOGLEAI_API_KEY',
           },
         },
+        agents = {
+          {
+            name = 'ChatGPT-o3-mini',
+            disable = true,
+          },
+          {
+            name = 'CodeGPT-o3-mini',
+            disable = true,
+          },
+          {
+            name = 'ChatGPT4o',
+            disable = true,
+          },
+          {
+            name = 'CodeGPT4o',
+            disable = true,
+          },
+          {
+            provider = 'googleai',
+            name = 'ChatGemini',
+            chat = true,
+            command = false,
+            model = { model = 'gemini-2.5-flash', temperature = 1.1, top_p = 1 },
+            system_prompt = require('gp.defaults').chat_system_prompt,
+          },
+          {
+            provider = 'googleai',
+            name = 'CodeGemini',
+            chat = false,
+            command = true,
+            model = { model = 'gemini-2.5-flash', temperature = 0.8, top_p = 1 },
+            system_prompt = require('gp.defaults').code_system_prompt,
+          },
+        },
         -- For customization, refer to Install > Configuration in the Documentation/Readme
       }
       require('gp').setup(conf)

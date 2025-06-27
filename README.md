@@ -21,9 +21,25 @@ There are a few quirks or manual steps in order for me to set up Neovim entirely
 
 I use the VS Code extension for this. It is easy to install via `:LspInstall tailwindcss`, I just need to remember to actually do it... 🤓 
 
-### Pieces
+### AI Agents
 
-I use [Pieces](https://pieces.app/) primarily to provide chat style AI help. I am also experimenting with the Snippets feature.
+#### Current
+
+I am currently using [gp.nvim](https://github.com/Robitx/gp.nvim) with free-tier Open AI and Gemini API keys. For paid tier, it looks like [Claude](https://www.anthropic.com/api) may be a good option but first let's see if I run out of resources with the free tiers.
+
+#### Previous
+
+I used to use [Pieces](https://pieces.app/) primarily to provide chat style AI help. I am also experimenting with the Snippets feature.
+
+To reinstall at some point if needed, reinstate the remove line in the config:
+
+```
+   'kyazdani42/nvim-web-devicons',
+   'MunifTanjim/nui.nvim',
+-  'pieces-app/plugin_neovim',
+```
+
+Then be sure to do the following:
 
 - `brew install --cask pieces`
 - Open Pieces and log in.

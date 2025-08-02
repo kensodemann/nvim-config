@@ -236,6 +236,13 @@ require('lazy').setup({
             local agent = gp.get_command_agent()
             gp.Prompt(params, gp.Target.vnew, agent, template)
           end,
+          TestRequirements = function(gp, params)
+            local template = 'I have the following requirements commented in {{filename}}:\n\n'
+              .. '```{{filetype}}\n{{selection}}\n```\n\n'
+              .. 'Please respond by writing unit tests for the requirements above.'
+            local agent = gp.get_command_agent()
+            gp.Prompt(params, gp.Target.vnew, agent, template)
+          end,
         },
       }
       require('gp').setup(conf)
@@ -891,7 +898,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'catppuccin-latte'
+      vim.cmd.colorscheme 'catppuccin-mocha'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'

@@ -26,6 +26,27 @@ snippet expafunc "Add an exported arrow function"
 	export const $1 = () => {
 	};
 
+snippet vifycomptst "Start a generic Vuetify component test"
+	import { mount } from '@vue/test-utils';
+	import { describe, expect, it } from 'vitest';
+	import { createVuetify } from 'vuetify';
+	import * as components from 'vuetify/components';
+	import * as directives from 'vuetify/directives';
+	import $1 from '../$2.vue';
+
+	const vuetify = createVuetify({
+	  components,
+	  directives,
+	});
+	const mountPage = () => mount($1, { global: { plugins: [vuetify] } });
+
+	describe('$3', () => {
+	  it('renders', () => {
+	    const wrapper = mountPage();
+	    expect(wrapper.exists()).toBe(true);
+	  });
+	});
+
 
 snippet ionvuepagetest "Start an Ionic Vue page test"
 	import { mount, VueWrapper } from '@vue/test-utils';

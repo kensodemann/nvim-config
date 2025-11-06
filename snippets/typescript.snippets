@@ -38,11 +38,11 @@ snippet vifycomptst "Start a generic Vuetify component test"
 	  components,
 	  directives,
 	});
-	const mountPage = () => mount($1, { global: { plugins: [vuetify] } });
+	const mountComponent = () => mount($1, { global: { plugins: [vuetify] } });
 
 	describe('$3', () => {
 	  it('renders', () => {
-	    const wrapper = mountPage();
+	    const wrapper = mountComponent();
 	    expect(wrapper.exists()).toBe(true);
 	  });
 	});

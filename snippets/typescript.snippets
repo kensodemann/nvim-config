@@ -28,21 +28,31 @@ snippet expafunc "Add an exported arrow function"
 
 snippet vifycomptst "Start a generic Vuetify component test"
 	import { mount } from '@vue/test-utils';
-	import { describe, expect, it } from 'vitest';
+	import { afterEach, describe, expect, it, vi } from 'vitest';
 	import { createVuetify } from 'vuetify';
 	import * as components from 'vuetify/components';
 	import * as directives from 'vuetify/directives';
-	import $1 from '../$2.vue';
+	import $1 from '../$1.vue';
 
 	const vuetify = createVuetify({
 	  components,
 	  directives,
 	});
-	const mountComponent = () => mount($1, { global: { plugins: [vuetify] } });
+	const mountComponent = (props = {}) => mount($1, { props, global: { plugins: [vuetify] } });
 
-	describe('$3', () => {
+	describe('$1', () => {
+	  let wrapper: ReturnType<typeof mountComponent>;
+
+	  afterEach(() => {
+	    wrapper?.unmount();
+	    vi.clearAllTimers();
+	    try {
+	      vi.useRealTimers();
+	    } catch {}
+	  });
+
 	  it('renders', () => {
-	    const wrapper = mountComponent();
+	    wrapper = mountComponent();
 	    expect(wrapper.exists()).toBe(true);
 	  });
 	});

@@ -25,25 +25,16 @@ I use the VS Code extension for this. It is easy to install via `:LspInstall tai
 
 #### Current
 
-I am currently using [gp.nvim](https://github.com/Robitx/gp.nvim) with free-tier Open AI and Gemini API keys. For paid tier, it looks like [Claude](https://www.anthropic.com/api) may be a good option but first let's see if I run out of resources with the free tiers.
+I have decided to subscribe to GitHub Copilot because it seems well worth the $100 / year. I am using the following two plugins for the integration:
+
+- `zbirenbaum/copilot.lua`: Used for insertions. Most important hotkey: `<C-i>` to insert the current suggestion.
+- `CopilotC-Nvim/CopilotChat.nvim`: Used for chat mode. Use `<space>cc` for chat mode, `<space>ct` to generate tests, and `<space>ce` to explain some code.
+
+I have not integrated Copilot with "blink" (part of the suggestion system). Using the "ghost" text and `<C-i>` inserting it works really well, so I am going to stick with that for now.
 
 #### Previous
 
-I used to use [Pieces](https://pieces.app/) primarily to provide chat style AI help. I am also experimenting with the Snippets feature.
+I was using [gp.nvim](https://github.com/Robitx/gp.nvim) with free-tier Open AI and Gemini API keys. For paid tier, it looks like [Claude](https://www.anthropic.com/api) may be a good option but first let's see if I run out of resources with the free tiers.
 
-To reinstall at some point if needed, reinstate the remove line in the config:
+I could also use this with Copilot, but I really like how the Copilot plugins I am using right now work OOTB, and there is a lot less configuration required, so I am likely to stick with that. Just leaving this noted here in case I run into limitations.
 
-```
-   'kyazdani42/nvim-web-devicons',
-   'MunifTanjim/nui.nvim',
--  'pieces-app/plugin_neovim',
-```
-
-Then be sure to do the following:
-
-- `brew install --cask pieces`
-- Open Pieces and log in.
-- If Python is installed via Homebrew, uninstall it.
-- Manually install [Python](https://www.python.org/downloads/).
-- `pip3 install pynvim`
-- Start `nvim` and `:UpdateRemotePlugins`

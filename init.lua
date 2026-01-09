@@ -158,6 +158,60 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      require('copilot').setup {
+        filetypes = {
+          -- ensure copilot is enabled for certain filetypes
+          typescript = true,
+          javascript = true,
+          lua = true,
+          python = true,
+          go = true,
+          rust = true,
+          vue = true,
+          -- ensure copilot is disabled for certain filetypes
+          yaml = false,
+          markdown = false,
+          help = false,
+          gitcommit = false,
+          gitrebase = false,
+          hgcommit = false,
+          svn = false,
+          cvs = false,
+        },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          keymap = {
+            accept = '<C-i>', -- Control+I to accept(Insert) suggestion (avoids Tab conflicts)
+            next = '<C-j>',
+            prev = '<C-k>',
+          },
+        },
+      }
+    end,
+  },
+  {
+    'CopilotC-Nvim/CopilotChat.nvim',
+    dependencies = {
+      { 'zbirenbaum/copilot.lua' },
+      { 'nvim-lua/plenary.nvim' },
+    },
+    build = 'make tiktoken', -- Only on MacOS or Linux
+    opts = {
+      -- See Configuration section for options
+    },
+    keys = {
+      { '<leader>cc', ':CopilotChat<CR>', desc = 'Copilot Chat' },
+      { '<leader>ct', ':CopilotChatTests<CR>', desc = 'Copilot Generate Tests' },
+      { '<leader>ce', ':CopilotChatExplain<CR>', desc = 'Copilot Explain Code' },
+    },
+  },
+
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.

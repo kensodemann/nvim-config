@@ -483,6 +483,13 @@ require('lazy').setup({
           -- Organize imports (if your LSP supports it)
           map('<leader>oi', function()
             vim.lsp.buf.code_action {
+              -- 'removeUnused' is a special code action that many LSPs support to remove unused imports.
+              -- This is not a standard code action, but a lot of LSPs support it (including tsserver).
+              ---@diagnostic disable-next-line: assign-type-mismatch
+              context = { only = { 'source.removeUnused.ts' }, diagnostics = {} },
+              apply = true,
+            }
+            vim.lsp.buf.code_action {
               context = { only = { 'source.organizeImports' }, diagnostics = {} },
               apply = true,
             }

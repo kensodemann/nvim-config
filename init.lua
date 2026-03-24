@@ -482,17 +482,20 @@ require('lazy').setup({
 
           -- Organize imports (if your LSP supports it)
           map('<leader>oi', function()
-            vim.lsp.buf.code_action {
-              -- 'removeUnused' is a special code action that many LSPs support to remove unused imports.
-              -- This is not a standard code action, but a lot of LSPs support it (including tsserver).
-              ---@diagnostic disable-next-line: assign-type-mismatch
-              context = { only = { 'source.removeUnused.ts' }, diagnostics = {} },
-              apply = true,
+            local params = {
+              command = 'typescript.removeUnused',
+              arguments = { vim.api.nvim_buf_get_name(0) },
+              title = '',
             }
-            vim.lsp.buf.code_action {
-              context = { only = { 'source.organizeImports' }, diagnostics = {} },
-              apply = true,
-            }
+            -- 1. Remove Unused (Synchronous request to wait for completion)
+            vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
+
+            -- 2. Organize/Sort Imports
+            params.command = 'typescript.organizeImports'
+            vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
+
+            -- Optional: Refresh the buffer to ensure UI is in sync
+            vim.cmd 'edit!'
           end, '[O]rganize [I]mports')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
@@ -567,15 +570,21 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        ts_ls = {
-          init_options = {
-            hostInfo = 'neovim',
-            plugins = {
-              {
-                name = '@vue/typescript-plugin',
-                location = '/opt/homebrew/lib/node_modules/@vue/typescript-plugin',
-                languages = { 'vue' },
+        vtsls = {
+          settings = {
+            vtsls = {
+              tsserver = {
+                globalPlugins = {
+                  {
+                    name = '@vue/typescript-plugin',
+                    location = '/opt/homebrew/lib/node_modules/@vue/typescript-plugin',
+                    languages = { 'vue' },
+                  },
+                },
               },
+            },
+            typescript = {
+              updateImportsOnFileMove = { enabled = 'always' },
             },
           },
           filetypes = {
@@ -586,7 +595,6 @@ require('lazy').setup({
             'vue',
           },
         },
-        --
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},

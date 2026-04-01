@@ -493,9 +493,6 @@ require('lazy').setup({
             -- 2. Organize/Sort Imports
             params.command = 'typescript.organizeImports'
             vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
-
-            -- Optional: Refresh the buffer to ensure UI is in sync
-            vim.cmd 'edit!'
           end, '[O]rganize [I]mports')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.

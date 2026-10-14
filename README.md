@@ -6,12 +6,16 @@ This is a fork of the excellent [Neovim Kickstart](https://github.com/nvim-lua/k
 
 Here are my steps (this is for a Mac, which is primarily what I use):
 
-- `brew install neovim`
+- `brew install neovim tree-sitter-cli`
 - Open terminal
 - `mkdir .config` and/or `cd .config`
 - `git clone git@bitbucket.org:kensodemann/recreation-planner.git nvim`
 
-That is pretty much it. Next time I start `nvim` everything should load.
+That is pretty much it. Next time I start `nvim` it asks to install the plugins (answer "Always"), and everything should load.
+
+Plugins are managed by Neovim's built-in `vim.pack` (Neovim 0.12+), and versions are pinned in `nvim-pack-lock.json`. Use `:PackUpdate` to update plugins, `:PackStatus` to see what is installed, and `:PackClean` to remove plugins that are no longer in the config.
+
+Treesitter parsers, `telescope-fzf-native`, and LuaSnip's regex support are compiled locally, so the Xcode / Command Line Tools C compiler has to work. If builds fail with `ld: tapi error ... unknown architecture` after a macOS upgrade, the selected Xcode is older than the SDK; update Xcode or run `sudo xcode-select --switch /Library/Developer/CommandLineTools`.
 
 ## Configuration Notes
 

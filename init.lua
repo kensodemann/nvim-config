@@ -251,7 +251,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       require('which-key').add {
-        { '<leader>c', group = '[C]ode' },
+        { '<leader>c', group = '[C]ode', mode = { 'n', 'v' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -480,7 +480,7 @@ require('lazy').setup({
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
           -- Organize imports (if your LSP supports it)
-          map('<leader>oi', function()
+          map('<leader>co', function()
             local params = {
               command = 'typescript.removeUnused',
               arguments = { vim.api.nvim_buf_get_name(0) },
@@ -492,7 +492,7 @@ require('lazy').setup({
             -- 2. Organize/Sort Imports
             params.command = 'typescript.organizeImports'
             vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
-          end, '[O]rganize [I]mports')
+          end, '[C]ode [O]rganize Imports')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -645,12 +645,12 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>cf',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = '[C]ode [F]ormat buffer',
       },
     },
     opts = {

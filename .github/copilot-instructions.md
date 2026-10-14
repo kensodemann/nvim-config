@@ -11,7 +11,7 @@
 ## High-level architecture
 
 - This repository is a personal fork of `kickstart.nvim`. It is a Neovim configuration, not a standalone plugin or application.
-- `init.lua` is the real entry point and contains most of the configuration: editor options, keymaps, plugin declarations, LSP setup, formatting, completion, Treesitter, and Copilot integration.
+- `init.lua` is the real entry point and contains most of the configuration: editor options, keymaps, plugin declarations, LSP setup, formatting, completion, and Treesitter.
 - `init.lua` bootstraps `lazy.nvim` on startup if it is missing, then registers the plugin graph with `require('lazy').setup(...)`.
 - Most plugin configuration stays inline in `init.lua`. Only a few extracted Kickstart modules are actively required near the bottom of that file, notably `kickstart.plugins.autopairs` and `kickstart.plugins.neo-tree`.
 - `lua/custom/plugins/` exists, but `{ import = 'custom.plugins' }` is currently commented out in `init.lua`, so files placed there are ignored unless that import is enabled.
@@ -28,4 +28,3 @@
 - New keymaps should keep the existing pattern: `<space>` leader, `vim.keymap.set(...)`, and a descriptive `desc`.
 - TypeScript/Vue behavior is built around `vtsls` plus `vue_ls`, not `tsserver`, and the custom organize-imports mapping uses synchronous `workspace/executeCommand` calls.
 - `kickstart.plugins.lint` exists and configures `markdownlint`, but it is currently commented out in `init.lua`, so markdown linting is not active unless that module is enabled.
-- Copilot is part of the active config: `zbirenbaum/copilot.lua` handles inline suggestions and `CopilotChat.nvim` is mapped on `<leader>cc`, `<leader>ct`, and `<leader>ce`.

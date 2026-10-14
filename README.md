@@ -25,16 +25,11 @@ I use the VS Code extension for this. It is easy to install via `:LspInstall tai
 
 #### Current
 
-I have decided to subscribe to GitHub Copilot because it seems well worth the $100 / year. I am using the following two plugins for the integration:
-
-- `zbirenbaum/copilot.lua`: Used for insertions. Most important hotkey: `<C-i>` to insert the current suggestion.
-- `CopilotC-Nvim/CopilotChat.nvim`: Used for chat mode. Use `<space>cc` for chat mode, `<space>ct` to generate tests, and `<space>ce` to explain some code.
-
-I have not integrated Copilot with "blink" (part of the suggestion system). Using the "ghost" text and `<C-i>` inserting it works really well, so I am going to stick with that for now.
+No AI agent is currently integrated into this configuration.
 
 #### Previous
 
-I was using [gp.nvim](https://github.com/Robitx/gp.nvim) with free-tier Open AI and Gemini API keys. For paid tier, it looks like [Claude](https://www.anthropic.com/api) may be a good option but first let's see if I run out of resources with the free tiers.
+I used GitHub Copilot through `zbirenbaum/copilot.lua` (inline suggestions) and `CopilotC-Nvim/CopilotChat.nvim` (chat). I removed both once I stopped using Copilot on my projects.
 
-I could also use this with Copilot, but I really like how the Copilot plugins I am using right now work OOTB, and there is a lot less configuration required, so I am likely to stick with that. Just leaving this noted here in case I run into limitations.
+Before that, I was using [gp.nvim](https://github.com/Robitx/gp.nvim) with free-tier Open AI and Gemini API keys. For paid tier, it looks like [Claude](https://www.anthropic.com/api) may be a good option but first let's see if I run out of resources with the free tiers.
 

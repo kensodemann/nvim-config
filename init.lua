@@ -346,8 +346,6 @@ require('lazy').setup({
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
-
-
     },
     config = function()
       -- Brief aside: **What is LSP?**

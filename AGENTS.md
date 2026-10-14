@@ -1,12 +1,13 @@
-# Copilot Instructions
+# Agent Instructions
 
 ## Build, test, and lint commands
 
-- There is no repo-level build script or automated test suite in this repository.
-- Check Lua formatting: `stylua --check .`
-- Format Lua files: `stylua .`
-- Check a single file: `stylua --check init.lua`
-- Runtime sanity check inside Neovim: `nvim --headless "+checkhealth kickstart" +qa`
+- There is no repo-level build script or automated test suite in this repository. `.github/workflows/stylua.yml` is inherited from Kickstart and only runs on the upstream `nvim-lua/kickstart.nvim` repo, so no CI runs for this fork.
+- `stylua` is installed by Mason and is not on the shell `PATH`. Use the full path `~/.local/share/nvim/mason/bin/stylua`.
+- Check Lua formatting: `~/.local/share/nvim/mason/bin/stylua --check .`
+- Format Lua files: `~/.local/share/nvim/mason/bin/stylua .`
+- Check that the config loads: `nvim --headless +qa`. Any output means `init.lua` or a plugin raised an error; Neovim exits `0` even when that happens, so check the output rather than the exit code.
+- `nvim --headless "+checkhealth kickstart" +qa` is not a useful check: it writes the report to a buffer that is never shown, and the report only verifies that `git`, `make`, `unzip`, and `rg` are installed.
 
 ## High-level architecture
 
@@ -18,6 +19,7 @@
 - LSP and external tool management are centralized in `init.lua`: Mason installs servers/tools, `vtsls` and `vue_ls` handle JavaScript/TypeScript/Vue support, and `conform.nvim` handles formatting on save.
 - Vue TypeScript support is wired through the Mason-installed Vue language server bundle (`stdpath('data') .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'`) rather than a system-wide npm install.
 - Local snippets live in `snippets/` and are loaded through LuaSnip's SnipMate loader. Custom spelling additions live in `spell/`.
+- `lazy-lock.json` is git-ignored, so plugin version pins are local to each machine and changes to it never show up in a diff.
 
 ## Key conventions
 
@@ -25,6 +27,10 @@
 - Do not add files under `lua/custom/plugins/` unless you also enable `{ import = 'custom.plugins' }` in `init.lua`.
 - Preserve the repository's Lua formatting rules from `.stylua.toml`: 2-space indentation, single quotes when possible, width 160, and no forced call parentheses.
 - Prefer Mason/Conform-managed tooling over ad hoc shell hooks. Lua formatting uses `stylua`; CSS/HTML/JS/TS/Vue formatting is configured through `prettierd`/`prettier` in Conform.
-- New keymaps should keep the existing pattern: `<space>` leader, `vim.keymap.set(...)`, and a descriptive `desc`.
-- TypeScript/Vue behavior is built around `vtsls` plus `vue_ls`, not `tsserver`, and the custom organize-imports mapping uses synchronous `workspace/executeCommand` calls.
+- Keymaps use the `<space>` leader and always set a descriptive `desc`. Match the pattern already used where the keymap lives:
+  - General keymaps: `vim.keymap.set(...)` at the top level of `init.lua`.
+  - LSP keymaps: the buffer-local `map(keys, func, desc)` helper inside the `LspAttach` callback.
+  - Keymaps that should lazy-load a plugin: the plugin spec's `keys` table.
+- New `<leader>` keymaps belong under an existing which-key group (registered in the `which-key.nvim` config): `<leader>c` Code, `<leader>d` Document, `<leader>r` Rename, `<leader>s` Search, `<leader>w` Workspace, `<leader>t` Toggle, `<leader>h` Git Hunk. Start the `desc` with the group's bracketed letter (for example `[C]ode [F]ormat buffer`). Only add a new group when none of these fit, and register it with which-key at the same time.
+- TypeScript/Vue behavior is built around `vtsls` plus `vue_ls`, not `tsserver`. The custom organize-imports keymap (`<leader>co`) uses synchronous `workspace/executeCommand` calls to remove unused imports and then organize the rest.
 - `kickstart.plugins.lint` exists and configures `markdownlint`, but it is currently commented out in `init.lua`, so markdown linting is not active unless that module is enabled.

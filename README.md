@@ -17,6 +17,44 @@ Plugins are managed by Neovim's built-in `vim.pack` (Neovim 0.12+), and versions
 
 Treesitter parsers, `telescope-fzf-native`, and LuaSnip's regex support are compiled locally, so the Xcode / Command Line Tools C compiler has to work. If builds fail with `ld: tapi error ... unknown architecture` after a macOS upgrade, the selected Xcode is older than the SDK; update Xcode or run `sudo xcode-select --switch /Library/Developer/CommandLineTools`.
 
+## Commands and Shortcuts
+
+- `<leader>` is currently set to the spacebar
+- Diagnostic text shows at the end of the line: `[d` / `]d` open the full message.
+- **New gitsigns keys:**
+  - `]c` / `[c` jump between changes
+  - `<leader>h…` keys stage, reset, preview and blame changes
+  - `<leader>tb` and `<leader>tw` toggle line blame and word-level diffs
+- **Telescope:** `<leader>sc` searches commands.
+- **Completion:**
+  - `<C-y>` accepts
+  - `<C-l>` / `<C-h>` still jump through snippets, and `<Tab>` / `<S-Tab>` also work
+  - `<C-e>` closes the menu
+  - `<C-k>` toggles signature help
+- **Spelling:**
+  - `]s` / `[s` next / previous misspelled word
+  - `z=` show suggestions. Type a number and press Enter to accept one
+  - `zg` add the word to the dictionary
+  - `zw` mark the word as wrong
+  - `zug` / `zuw` undo `zg` / `zw`
+
+## Managing plugins
+
+`vim.pack` is being used to manage plugins.
+
+| Command | What it does | Replaces |
+|---|---|---|
+| `:PackUpdate` | Downloads updates and opens a review tab. Type `:write` to apply them or `:quit` to discard them. Pass plugin names (with tab-completion) to update only those, for example `:PackUpdate telescope.nvim`. | `:Lazy update` / `:Lazy sync` |
+| `:PackStatus` | Shows installed plugins and their versions without downloading anything. Move between plugins with `[[` and `]]`. | `:Lazy` |
+| `:PackClean` | Lists plugins that are on disk but no longer added in the config, and deletes them after you confirm. | `:Lazy clean` |
+
+- **New plugins:** add a `vim.pack.add` line and restart. Neovim installs it after you confirm.
+- **Removing a plugin:** delete its `vim.pack.add` line first (otherwise it is reinstalled), restart, then run `:PackClean`.
+- **After an update:** run `:restart` to load the new code, and commit `nvim-pack-lock.json`.
+- **Rolling back an update:** run `git checkout HEAD -- nvim-pack-lock.json`, then `:restart`, then `:lua vim.pack.update(nil, { offline = true, target = 'lockfile' })`.
+- **Not covered by these commands:** language servers and tools are still managed in `:Mason`. Treesitter parsers rebuild automatically when nvim-treesitter updates; `:TSUpdate` also works.
+
+
 ## Configuration Notes
 
 There are a few quirks or manual steps in order for me to set up Neovim entirely.

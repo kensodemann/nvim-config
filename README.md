@@ -21,9 +21,14 @@ Treesitter parsers, `telescope-fzf-native`, and LuaSnip's regex support are comp
 
 - `<leader>` is currently set to the spacebar
 - Diagnostic text shows at the end of the line: `[d` / `]d` open the full message.
-- **New gitsigns keys:**
-  - `]c` / `[c` jump between changes
-  - `<leader>h…` keys stage, reset, preview and blame changes
+- **Git hunks (gitsigns):**
+  - `]c` next git change
+  - `[c` previous git change
+  - `<leader>hs` stage hunk
+  - `<leader>hr` reset hunk
+  - `<leader>hp` preview hunk
+  - `<leader>hq` quickfix list of hunks in this file
+  - `<leader>h` lists all hunk-related commands
   - `<leader>tb` and `<leader>tw` toggle line blame and word-level diffs
 - **Telescope:** `<leader>sc` searches commands.
 - **Completion:**

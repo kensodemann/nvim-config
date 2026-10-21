@@ -966,7 +966,7 @@ do
   -- If separate modules need a specific order, require them explicitly instead:
   -- require 'custom.plugins.colorscheme'
   -- require 'custom.plugins.ui'
-  -- require 'custom.plugins.git'
+  require 'custom.plugins.git'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`

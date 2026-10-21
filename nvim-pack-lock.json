@@ -55,6 +55,10 @@
       "src": "https://github.com/nvim-neo-tree/neo-tree.nvim",
       "version": ">=0.0.0"
     },
+    "neogit": {
+      "rev": "832a2db084ac25c2801fd73a3fab58f3c82ed2ec",
+      "src": "https://github.com/NeogitOrg/neogit"
+    },
     "nui.nvim": {
       "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
       "src": "https://github.com/MunifTanjim/nui.nvim"

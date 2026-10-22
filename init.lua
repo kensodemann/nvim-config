@@ -749,7 +749,7 @@ do
       -- languages here or re-enable it for the disabled ones.
       local disable_lsp_fallback = { c = true, cpp = true }
       return {
-        timeout_ms = 500,
+        timeout_ms = 3000,
         lsp_format = disable_lsp_fallback[vim.bo[bufnr].filetype] and 'never' or 'fallback',
       }
     end,

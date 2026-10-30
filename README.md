@@ -31,6 +31,21 @@ Treesitter parsers, `telescope-fzf-native`, and LuaSnip's regex support are comp
   - `<leader>h` lists all hunk-related commands
   - `<leader>tb` and `<leader>tw` toggle line blame and word-level diffs
 - **Telescope:** `<leader>sc` searches commands.
+- **Flutter:**
+  - `<leader>f` lists Flutter commands
+  - `<leader>fr` run the app
+  - `<leader>fh` hot reload
+  - `<leader>fR` hot restart
+  - `<leader>fq` quit the running app
+  - `<leader>fd` pick a device
+  - `<leader>fe` pick an emulator
+  - `<leader>fp` `flutter pub get`
+  - `<leader>fo` toggle the widget outline
+  - `<leader>fl` toggle the run log
+  - `<leader>fc` pick any Flutter command
+  - `<leader>fb` toggle a breakpoint
+  - `<F5>` start or continue debugging
+  - `<F10>` / `<F11>` / `<F12>` step over, into, and out
 - **Completion:**
   - `<C-y>` accepts
   - `<C-l>` / `<C-h>` still jump through snippets, and `<Tab>` / `<S-Tab>` also work

@@ -542,6 +542,15 @@ do
   vim.pack.add { gh 'j-hui/fidget.nvim' }
   require('fidget').setup {}
 
+  -- Filetypes that use the TypeScript organize-imports commands below.
+  local tsserver_filetypes = {
+    'javascript',
+    'javascriptreact',
+    'typescript',
+    'typescriptreact',
+    'vue',
+  }
+
   --  This function gets run when an LSP attaches to a particular buffer.
   --    That is to say, every time a new file is opened that is associated with
   --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -566,19 +575,34 @@ do
       map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
       -- Organize imports (if your LSP supports it)
-      map('<leader>co', function()
-        local params = {
-          command = 'typescript.removeUnused',
-          arguments = { vim.api.nvim_buf_get_name(0) },
-          title = '',
-        }
-        -- 1. Remove Unused (Synchronous request to wait for completion)
-        vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
+      local filetype = vim.bo[event.buf].filetype
+      if vim.tbl_contains(tsserver_filetypes, filetype) then
+        map('<leader>co', function()
+          local params = {
+            command = 'typescript.removeUnused',
+            arguments = { vim.api.nvim_buf_get_name(0) },
+            title = '',
+          }
+          -- 1. Remove Unused (Synchronous request to wait for completion)
+          vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
 
-        -- 2. Organize/Sort Imports
-        params.command = 'typescript.organizeImports'
-        vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
-      end, '[C]ode [O]rganize Imports')
+          -- 2. Organize/Sort Imports
+          params.command = 'typescript.organizeImports'
+          vim.lsp.buf_request_sync(0, 'workspace/executeCommand', params, 1000)
+        end, '[C]ode [O]rganize Imports')
+      elseif filetype == 'dart' then
+        map(
+          '<leader>co',
+          function()
+            vim.lsp.buf.code_action {
+              context = { only = { 'source.organizeImports' }, diagnostics = {} },
+              apply = true,
+            }
+          end,
+          '[C]ode [O]rganize Imports'
+        )
+        vim.lsp.document_color.enable(true, { bufnr = event.buf })
+      end
 
       -- WARN: This is not Goto Definition, this is Goto Declaration.
       --  For example, in C this would take you to the header.
@@ -626,13 +650,6 @@ do
   -- Enable the following language servers
   --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
   --  See `:help lsp-config` for information about keys and how to configure
-  local tsserver_filetypes = {
-    'javascript',
-    'javascriptreact',
-    'typescript',
-    'typescriptreact',
-    'vue',
-  }
   local vue_language_server_path = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'
   local vue_plugin = {
     name = '@vue/typescript-plugin',
@@ -732,6 +749,81 @@ do
     vim.lsp.config(name, server)
     vim.lsp.enable(name)
   end
+
+  -- Flutter owns the Dart analysis server. It ships with the Flutter SDK, not Mason,
+  -- so `dartls` stays out of `servers` above and is not enabled a second time here.
+  vim.pack.add {
+    gh 'mfussenegger/nvim-dap',
+    gh 'nvim-neotest/nvim-nio',
+    gh 'rcarriga/nvim-dap-ui',
+    gh 'nvim-flutter/flutter-tools.nvim',
+  }
+
+  local dap = require 'dap'
+  local dapui = require 'dapui'
+
+  ---@diagnostic disable-next-line: missing-fields
+  dapui.setup {
+    icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+    ---@diagnostic disable-next-line: missing-fields
+    controls = {
+      icons = {
+        pause = '⏸',
+        play = '▶',
+        step_into = '⏎',
+        step_over = '⏭',
+        step_out = '⏮',
+        step_back = 'b',
+        run_last = '▶▶',
+        terminate = '⏹',
+        disconnect = '⏏',
+      },
+    },
+  }
+
+  dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+  dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+  dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+  require('flutter-tools').setup {
+    ui = { border = 'rounded' },
+    closing_tags = { highlight = 'Comment' },
+    devices = {
+      -- Skip the slow wireless device scan (mostly iOS on macOS).
+      args = { '--device-connection', 'attached' },
+    },
+    debugger = { enabled = true },
+    lsp = {
+      settings = {
+        completeFunctionCalls = true,
+        showTodos = true,
+        updateImportsOnRename = true,
+        enableSnippets = true,
+      },
+    },
+  }
+
+  pcall(require('telescope').load_extension, 'flutter')
+
+  require('which-key').add {
+    { '<leader>f', group = '[F]lutter' },
+  }
+
+  vim.keymap.set('n', '<leader>fc', '<cmd>FlutterCommands<cr>', { desc = '[F]lutter [C]ommands' })
+  vim.keymap.set('n', '<leader>fr', '<cmd>FlutterRun<cr>', { desc = '[F]lutter [R]un' })
+  vim.keymap.set('n', '<leader>fR', '<cmd>FlutterRestart<cr>', { desc = '[F]lutter [R]estart' })
+  vim.keymap.set('n', '<leader>fh', '<cmd>FlutterReload<cr>', { desc = '[F]lutter [H]ot reload' })
+  vim.keymap.set('n', '<leader>fq', '<cmd>FlutterQuit<cr>', { desc = '[F]lutter [Q]uit' })
+  vim.keymap.set('n', '<leader>fd', '<cmd>FlutterDevices<cr>', { desc = '[F]lutter [D]evices' })
+  vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', { desc = '[F]lutter [E]mulators' })
+  vim.keymap.set('n', '<leader>fp', '<cmd>FlutterPubGet<cr>', { desc = '[F]lutter [P]ub get' })
+  vim.keymap.set('n', '<leader>fo', '<cmd>FlutterOutlineToggle<cr>', { desc = '[F]lutter [O]utline' })
+  vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLogToggle<cr>', { desc = '[F]lutter [L]og' })
+  vim.keymap.set('n', '<leader>fb', function() dap.toggle_breakpoint() end, { desc = '[F]lutter [B]reakpoint' })
+  vim.keymap.set('n', '<F5>', function() dap.continue() end, { desc = 'Debug: Start/Continue' })
+  vim.keymap.set('n', '<F10>', function() dap.step_over() end, { desc = 'Debug: Step Over' })
+  vim.keymap.set('n', '<F11>', function() dap.step_into() end, { desc = 'Debug: Step Into' })
+  vim.keymap.set('n', '<F12>', function() dap.step_out() end, { desc = 'Debug: Step Out' })
 end
 
 -- ============================================================
@@ -770,6 +862,7 @@ do
       typescript = { 'prettierd', 'prettier', stop_after_first = true },
       typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       vue = { 'prettierd', 'prettier', stop_after_first = true },
+      dart = { 'dart_format' },
     },
   }
 
@@ -888,7 +981,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'dart', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'yaml' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
